@@ -7,7 +7,6 @@ fetch("http://localhost:3000/api/products")
     .then ((res) => res.json())
     //Le résultat est nommé products
     .then((products) => {
-    //affiche le résultat dans la console
         console.table(products);
     //Appel de la fonction d'affichage des produits
         showProducts(products);
