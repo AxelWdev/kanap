@@ -71,7 +71,7 @@ itemQuantity.addEventListener("input", (e)=>{
     product.quantity = quantity;
     console.log(product);
 });
-
+// Au clic sur le bouton, appelle la fonction Cart() si la couleur et le nombre de produit est correct
 buttonDOM.addEventListener('click',()=>{
     if (product.colors === "" || product.colors === undefined || product.quantity < 1 || product.quantity > 100 || product.quantity === undefined){
         alert("Veuillez sélectionner une quantité entre 1 et 100 et une couleur.")
@@ -87,6 +87,7 @@ let savedProducts = [];
 let productBuffer = [];
 let productToPush = [];
 
+//Fonction qui ajoute le premier produit dans le local storage si savedProducts est vide
 function firstProduct() { 
     
     if (savedProducts === null){
@@ -96,6 +97,7 @@ function firstProduct() {
     }
 }
 
+//Ajoute un produit dans le local storage
 function addProduct(){
     productToPush = [];
     productBuffer.push(product);
@@ -108,6 +110,7 @@ function Cart() {
     savedProducts = JSON.parse(localStorage.getItem("storedCart"));
     //si le panier n'est pas vide
     if(savedProducts){
+        //modifie la quantité du produit dans le local storage si celui ci est déjà présent 
         for(let i of savedProducts){
             if(i._id === id && i.colors === product.colors){
                 alert("Cet article est déjà présent dans le panier");
@@ -116,8 +119,10 @@ function Cart() {
                 return (localStorage.storedCart = JSON.stringify(savedProducts));
             }
         }
+        //Sinon l'ajoute dans le locale storage
         return addProduct();
     }
+    //ajoute le premier produit si aucun autre return n'est déclenché
     return  firstProduct();
     
 }
