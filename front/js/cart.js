@@ -271,8 +271,9 @@ function packet(){
     },
     product: productsArray,
   };
-productsArray = [];
+
   
+  productsArray = [];
 }
 
   function postPacket(){
@@ -280,12 +281,13 @@ productsArray = [];
   createProductsArray();
   packet();
   console.log(contactObject);
+  console.log(JSON.stringify(contactObject));
 
   fetch("http://localhost:3000/api/products/order", {
-  method: 'POST',
+  method: "POST",
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify(contactObject),
 })
@@ -293,9 +295,9 @@ productsArray = [];
 .then((data) =>{
   console.log(data);
 })
-.catch(function(err) {
-  console.log(err);
-})
+.catch((err)=> {
+      console.log(err);
+    })
 }
 
 console.log(productsArray)
