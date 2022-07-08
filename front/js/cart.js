@@ -256,20 +256,24 @@ function createProductsArray(){
   
 }
 
-let postData
+
 let contactObject;
 function packet(){
   let contact;
   contact = JSON.parse(localStorage.getItem("contactClient"));
   contactObject = {
-      firstName: contact.firstName,
-      lastName: contact.lastName,
-      address: contact.address,
-      city: contact.city,
-      email: contact.email,
+    contact:
+        {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        address: contact.address,
+        city: contact.city,
+        email: contact.email,
+        },
+      products: productsArray,
   };
 
-  postData = {contactObject, productsArray};
+  
   productsArray = [];
 }
 
@@ -278,7 +282,7 @@ function packet(){
   createProductsArray();
   packet();
   console.log(contactObject);
-  console.log(JSON.stringify(postData)); 
+  console.log(JSON.stringify(contactObject)); 
 
   fetch("http://localhost:3000/api/products/order", {
   method: "POST",
@@ -286,7 +290,7 @@ function packet(){
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify(postData),
+  body: JSON.stringify(contactObject),
 })
 .then((res) => res.json())
 .then((data) =>{
