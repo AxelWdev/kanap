@@ -4,7 +4,7 @@ const cartDOM = document.querySelector("#cart__items");
 fetch("http://localhost:3000/api/products")
     .then ((res) => res.json())
     .then((items) => {
-    console.table(items);
+    //console.table(items);
     getCart(items);
 
     
@@ -116,7 +116,7 @@ function total() {
   fetch("http://localhost:3000/api/products")
       .then ((res) => res.json())
       .then((items) => {
-      console.table(items);
+      //console.table(items);
       let cart = JSON.parse(localStorage.getItem("storedCart"));
       if(cart.length > 0){
         for (let cartItem of cart) {
@@ -157,3 +157,159 @@ function total() {
 }
 
 
+//------------------------------------------------------------------------------
+// Formulaire
+//------------------------------------------------------------------------------
+
+
+
+
+function validate(){
+  
+  var firstName = document.getElementById("firstName").value;
+  var firstNameError = document.getElementById("firstNameErrorMsg");
+  var lastName = document.getElementById("lastName").value; 
+  var lastNameError = document.getElementById("lastNameErrorMsg");
+  var address = document.getElementById("address").value;
+  var addressError = document.getElementById("addressErrorMsg");
+  var city = document.getElementById("city").value;
+  var cityError = document.getElementById("cityErrorMsg");
+  var email = document.getElementById("email").value;
+  var emailError = document.getElementById("emailErrorMsg");
+  var letterRGEX = /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\s-]+$/;
+  var addressRGEX = /^[a-zA-Z0-9àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\s-]+$/;
+  var emailRGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  var firstNameResult = letterRGEX.test(firstName);
+  var lastNameResult = letterRGEX.test(lastName);
+  var addressResult = addressRGEX.test(address);
+  var cityResult = letterRGEX.test(city);
+  var emailResult = emailRGEX.test(email);
+
+  if (firstNameResult == false){
+    firstNameError.innerText = "Veuillez renseigner un prénom correct";
+    return false;
+  }else {
+    firstNameError.innerText ="";
+  }
+
+  if(lastNameResult == false){
+    lastNameError.innerText = "Veuillez renseigner un nom correct";
+    return false;
+  }else {
+    lastNameError.innerText = "";
+  }
+
+  if (addressResult == false){
+    addressError.innerText = "Veuillez renseigner une adresse correcte";
+    return false;
+  }else {
+    addressError.innerText = "";
+  }
+  if (cityResult == false){
+    cityError.innerText = "Veuillez renseigner une ville correcte";
+    return false;
+  }else {
+    cityError.innerText = "";
+  }
+
+  if (emailResult == false){
+    emailError.innerText = "Veuillez renseigner une addresse Email correcte";
+    return false;
+  } else {
+    emailError.innerText = "";
+  }
+return true;
+
+}
+
+
+
+
+const orderButton = document.getElementById("order");
+
+
+
+
+function createContact(){
+  let contactClient = {};
+  contactClient.firstName = document.getElementById("firstName").value;
+  contactClient.lastName = document.getElementById("lastName").value;
+  contactClient.address = document.getElementById("address").value;
+  contactClient.city = document.getElementById("city").value;
+  contactClient.email = document.getElementById("email").value;
+  localStorage.contactClient = JSON.stringify(contactClient);
+}
+
+let productsArray =[];
+function createProductsArray(){
+
+  let cartProductsArray = JSON.parse(localStorage.getItem("storedCart"));
+  console.log(cartProductsArray);
+  if(cartProductsArray && cartProductsArray.length > 0){
+    for(let item of cartProductsArray){
+      productsArray.push(item._id); 
+    }
+  } else{
+    console.log("panier vide")
+  }
+  
+}
+
+
+let contactObject;
+function packet(){
+  let contact;
+  contact = JSON.parse(localStorage.getItem("contactClient"));
+  contactObject = {
+    contact: {
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      address: contact.address,
+      city: contact.city,
+      email: contact.email,
+    },
+    product: productsArray,
+  };
+
+  
+}
+
+  function postPacket(){
+  createContact();
+  createProductsArray();
+  packet();
+  console.log(contactObject);
+
+  fetch("http://localhost:3000/api/products/order", {
+  method: 'POST',
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(contactObject),
+})
+.then((res) => res.json())
+.then((data) =>{
+  console.log(data);
+})
+.catch(function(err) {
+  console.log(err);
+})
+}
+
+console.log(productsArray)
+orderButton.addEventListener("click", (e) => {
+  validate();
+  if(validate()) {
+    e.preventDefault();
+    postPacket();
+  }
+  else {
+    e.preventDefault();
+  }
+})
+//document.querySelector(".cart__order__form").addEventListener("keyup", () => {
+ // validate();
+ // console.log(validate()); 
+//})
