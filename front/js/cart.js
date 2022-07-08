@@ -271,7 +271,7 @@ function packet(){
     },
     product: productsArray,
   };
-
+productsArray = [];
   
 }
 
