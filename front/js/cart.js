@@ -39,7 +39,7 @@ function getCart(items){
     changeQuantity();
     deleteItem();
 }
-//affiche les produits
+//Fonction qui affiche les produits dans le DOM 
 function showProductsDOM(cart){
     let result = '';
     
@@ -71,7 +71,7 @@ function showProductsDOM(cart){
     total();
 
 }
-
+//Fonction qui écoute le changement du nombre du produit, et modifie la quantité du produit dans le localStorage
 function changeQuantity(){
   const cartItemDiv = document.querySelectorAll(".cart__item");
 
@@ -89,7 +89,7 @@ function changeQuantity(){
     })
   })
 }
-
+//Fonction qui écoute le clic sur le bouton "supprimer", et retire le produit correspondant du localStorage
 function deleteItem() {
   const cartDelete = document.querySelectorAll(".deleteItem");
   cartDelete.forEach((cartDelete) => {
@@ -111,7 +111,7 @@ function deleteItem() {
   })
 }
   
-
+//Fonction qui récupère le prix des produits depuis l'api, et actualise la quantité et le prix total
 function total() {
   fetch("http://localhost:3000/api/products")
       .then ((res) => res.json())
@@ -163,7 +163,7 @@ function total() {
 
 
 
-
+//Fonction qui vérifié la validité des inputs dans le formulaire grâce aux REGEX, retourne true ou false.
 function validate(){
   
   var firstName = document.getElementById("firstName").value;
@@ -230,7 +230,7 @@ const orderButton = document.getElementById("order");
 
 
 
-
+//Fonction qui crée  un object contact
 function createContact(){
   let contactClient = {};
   contactClient.firstName = document.getElementById("firstName").value;
@@ -242,6 +242,7 @@ function createContact(){
 }
 
 let productsArray =[];
+//Fonction qui crée un tableau contenant les ID des produits présents dans le localStorage.
 function createProductsArray(){
 
   let cartProductsArray = JSON.parse(localStorage.getItem("storedCart"));
@@ -258,6 +259,7 @@ function createProductsArray(){
 
 
 let contactObject;
+//Fonction qui crée un object avec l'object contactClient et l'array productsArray
 function packet(){
   let contact;
   contact = JSON.parse(localStorage.getItem("contactClient"));
@@ -276,7 +278,8 @@ function packet(){
   
   productsArray = [];
 }
-
+//Fonction qui envoie le dernier object ContactObject à l'api avec la methode POST
+//Récupère orderId depuis la réponde de l'api et redirige sur la page confirmation avec cet ID
   function postPacket(){
   createContact();
   createProductsArray();
@@ -295,6 +298,7 @@ function packet(){
 .then((res) => res.json())
 .then((data) =>{
   console.log(data);
+  window.location.href = "/front/html/confirmation.html?commande=" + data.orderId;
 })
 .catch((err)=> {
       console.log(err);
@@ -302,17 +306,14 @@ function packet(){
 }
 
 console.log(productsArray)
+//Ecoute le clic du bouton "Commander" et appelle postPacket() si validate() retourne true
 orderButton.addEventListener("click", (e) => {
+  e.preventDefault();
   validate();
   if(validate()) {
-    e.preventDefault();
     postPacket();
   }
-  else {
-    e.preventDefault();
-  }
 })
-//document.querySelector(".cart__order__form").addEventListener("keyup", () => {
- // validate();
- // console.log(validate()); 
-//})
+
+
+

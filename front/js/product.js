@@ -65,7 +65,7 @@ itemColors.addEventListener("input", (e)=>{
     console.log(product);
 });
 
-//choix de la quantité
+//Ajoute la quantité choisie à l'object produit 
 itemQuantity.addEventListener("input", (e)=>{
     let quantity = e.target.value;
     product.quantity = quantity;
@@ -78,7 +78,7 @@ buttonDOM.addEventListener('click',()=>{
     }
     else{
         Cart();
-        console.log("achat")
+        console.log("Produit ajouté au panier")
     }
 });
 
